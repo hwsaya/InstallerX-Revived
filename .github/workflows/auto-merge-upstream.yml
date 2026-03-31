@@ -1,0 +1,64 @@
+name: Auto Sync & Patch
+
+on:
+  schedule:
+    # 每天北京时间早上 8 点自动运行一次
+    - cron: '0 0 * * *'
+  # 允许手动点击运行
+  workflow_dispatch:
+
+jobs:
+  sync-and-patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Hard Sync from Upstream
+        run: |
+          # 1. 获取作者的最新代码
+          git remote add upstream https://github.com/hwsaya/installerx-revived.git
+          git fetch upstream
+          
+          # 2. 【核心】直接重置为作者最新状态，抛弃合并，彻底告别冲突！
+          # 这样你就能完美继承作者每次更新的 versionCode
+          git reset --hard upstream/main
+
+      - name: Patch My Package & VersionName
+        run: |
+          # 3. 使用 Python 脚本精准替换代码中的属性
+          python -c '
+          import re
+          with open("app/build.gradle.kts", "r") as f:
+              code = f.read()
+          
+          # 替换原作者复杂的 applicationId 判断逻辑为你的包名
+          code = re.sub(r"applicationId\s*=\s*project\.findProperty\(\"APP_ID\"\)\s*as\s*String\?\s*\n\s*\?\:\s*\".*?\"", "applicationId = \"com.android.packageinstaller\"", code)
+          
+          # 兜底匹配：如果已经是单行包名了，直接替换
+          if "applicationId = \"com.android.packageinstaller\"" not in code:
+              code = re.sub(r"applicationId\s*=\s*\".*?\"", "applicationId = \"com.android.packageinstaller\"", code)
+          
+          # 精准替换 versionName 为 16
+          code = re.sub(r"versionName\s*=\s*\".*?\"", "versionName = \"16\"", code)
+          
+          with open("app/build.gradle.kts", "w") as f:
+              f.write(code)
+          '
+
+      - name: Commit and Push
+        run: |
+          # 4. 提交我们刚才替换好的代码，并强制推送到你的 GitHub
+          git add app/build.gradle.kts
+          git commit -m "Auto sync upstream and patch custom App ID" || echo "No changes to commit"
+          git push origin main --force
