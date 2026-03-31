@@ -46,24 +46,18 @@ android {
         storeFile != null && storePassword != null && keyAlias != null && keyPassword != null
 
     defaultConfig {
-        // 你如果根据InstallerX的源码进行打包成apk或其他安装包格式
-        // 请换一个applicationId，不要和官方的任何发布版本产生冲突。
-        // If you use InstallerX source code, package it into apk or other installation package format
-        // Please change the applicationId to one that does not conflict with any official release.
-        applicationId = project.findProperty("APP_ID") as String?
-            ?: "com.rosan.installer.x.revived"
+        // 1. 修改包名为系统安装器的包名
+        applicationId = "com.android.packageinstaller" 
+        
         namespace = "com.rosan.installer"
         minSdk = 26
         targetSdk = 37
-        // Version control:
-        // - versionName is auto-generated as "yy.MM" by default,
-        //   or manually set via the VERSION_NAME Gradle property.
-        // - Unstable and Preview builds automatically append the git commit hash
-        //   (e.g., "25.07.abc1234"), configured in productFlavors.
-        // - Stable builds use the base versionName as-is (e.g., "25.07").
-        // - versionCode must be incremented manually before each Stable release.
-        versionCode = 47
-        versionName = baseVersionName
+        
+        // 2. 将 VersionCode 改得比系统的 36 大（建议直接写 100）
+        versionCode = 100 
+        
+        // 3. 将 VersionName 改为 16 或你自己喜欢的显示版本号
+        versionName = "16.1" 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
