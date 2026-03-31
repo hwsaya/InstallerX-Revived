@@ -57,7 +57,7 @@ android {
         versionCode = 47
         
         // 3. 将 VersionName 改为 16 或你自己喜欢的显示版本号
-        versionName = "16" 
+        versionName = "16"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -129,13 +129,13 @@ android {
         create("Unstable") {
             dimension = "level"
             isDefault = true
-            versionNameSuffix = ".$gitHash"
+            
             buildConfigField("int", "BUILD_LEVEL", "0")
         }
 
         create("Preview") {
             dimension = "level"
-            versionNameSuffix = ".$gitHash"
+            
             buildConfigField("int", "BUILD_LEVEL", "1")
         }
 
