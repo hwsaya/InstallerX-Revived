@@ -52,11 +52,9 @@ android {
         namespace = "com.rosan.installer"
         minSdk = 26
         targetSdk = 37
-        
-        // 2. 将 VersionCode 改得比系统的 36 大（建议直接写 100）
+                
         versionCode = 47
-        
-        // 3. 将 VersionName 改为 16 或你自己喜欢的显示版本号
+                
         versionName = "16"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
