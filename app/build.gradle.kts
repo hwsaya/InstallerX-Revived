@@ -55,7 +55,7 @@ android {
                 
         versionCode = 47
                 
-        versionName = "16"
+        versionName = "17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
